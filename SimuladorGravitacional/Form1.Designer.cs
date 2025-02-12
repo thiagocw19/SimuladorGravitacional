@@ -31,26 +31,32 @@
             components = new System.ComponentModel.Container();
             contextMenuStrip1 = new ContextMenuStrip(components);
             groupBox1 = new GroupBox();
+            label11 = new Label();
+            label13 = new Label();
             label6 = new Label();
-            label5 = new Label();
+            label1 = new Label();
+            label3 = new Label();
+            label9 = new Label();
             label2 = new Label();
-            abrir_doc = new Button();
+            fast = new Button();
+            slow = new Button();
+            velAtual = new TextBox();
+            label4 = new Label();
+            label12 = new Label();
+            Forcay_box = new TextBox();
+            Forcax_box = new TextBox();
+            label5 = new Label();
             Parar_bt = new Button();
             Iniciar_bt = new Button();
             VelY_Box = new TextBox();
-            label11 = new Label();
             label10 = new Label();
             VelX_Box = new TextBox();
             label8 = new Label();
             PosY_Box = new TextBox();
             label7 = new Label();
             PosX_Box = new TextBox();
-            TempoIteracao_Box = new TextBox();
-            label4 = new Label();
             Iteracoes_Box = new TextBox();
-            label3 = new Label();
             Corpos_Box = new TextBox();
-            label1 = new Label();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -61,74 +67,179 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             groupBox1.BackColor = SystemColors.ControlLightLight;
+            groupBox1.Controls.Add(label11);
+            groupBox1.Controls.Add(label13);
             groupBox1.Controls.Add(label6);
-            groupBox1.Controls.Add(label5);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Controls.Add(label3);
+            groupBox1.Controls.Add(label9);
             groupBox1.Controls.Add(label2);
-            groupBox1.Controls.Add(abrir_doc);
+            groupBox1.Controls.Add(fast);
+            groupBox1.Controls.Add(slow);
+            groupBox1.Controls.Add(velAtual);
+            groupBox1.Controls.Add(label4);
+            groupBox1.Controls.Add(label12);
+            groupBox1.Controls.Add(Forcay_box);
+            groupBox1.Controls.Add(Forcax_box);
+            groupBox1.Controls.Add(label5);
             groupBox1.Controls.Add(Parar_bt);
             groupBox1.Controls.Add(Iniciar_bt);
             groupBox1.Controls.Add(VelY_Box);
-            groupBox1.Controls.Add(label11);
             groupBox1.Controls.Add(label10);
             groupBox1.Controls.Add(VelX_Box);
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(PosY_Box);
             groupBox1.Controls.Add(label7);
             groupBox1.Controls.Add(PosX_Box);
-            groupBox1.Controls.Add(TempoIteracao_Box);
-            groupBox1.Controls.Add(label4);
             groupBox1.Controls.Add(Iteracoes_Box);
-            groupBox1.Controls.Add(label3);
             groupBox1.Controls.Add(Corpos_Box);
-            groupBox1.Controls.Add(label1);
-            groupBox1.Dock = DockStyle.Right;
-            groupBox1.Location = new Point(583, 0);
+            groupBox1.Location = new Point(0, 510);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(225, 645);
+            groupBox1.Size = new Size(808, 135);
             groupBox1.TabIndex = 1;
             groupBox1.TabStop = false;
+            // 
+            // label11
+            // 
+            label11.AutoSize = true;
+            label11.Font = new Font("Segoe UI", 15F);
+            label11.Location = new Point(678, 56);
+            label11.Name = "label11";
+            label11.Size = new Size(23, 28);
+            label11.TabIndex = 44;
+            label11.Text = "↳";
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 15F);
+            label13.Location = new Point(130, 48);
+            label13.Name = "label13";
+            label13.Size = new Size(23, 28);
+            label13.TabIndex = 43;
+            label13.Text = "↲";
             // 
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(79, 326);
+            label6.Location = new Point(590, 38);
             label6.Name = "label6";
-            label6.Size = new Size(65, 15);
-            label6.TabIndex = 27;
-            label6.Text = "ATRIBUTOS";
+            label6.Size = new Size(110, 15);
+            label6.TabIndex = 41;
+            label6.Text = "Velocidade Atual ➝";
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(6, 28);
+            label1.Name = "label1";
+            label1.Size = new Size(111, 15);
+            label1.TabIndex = 40;
+            label1.Text = "Quantos corpos? ➝";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(314, 92);
+            label3.Name = "label3";
+            label3.Size = new Size(69, 15);
+            label3.TabIndex = 39;
+            label3.Text = "Iterações ➝";
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(456, 38);
+            label9.Name = "label9";
+            label9.Size = new Size(58, 15);
+            label9.TabIndex = 38;
+            label9.Text = "ForçaX ➝";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(350, 63);
+            label2.Name = "label2";
+            label2.Size = new Size(44, 15);
+            label2.TabIndex = 37;
+            label2.Text = "VelY ➝";
+            // 
+            // fast
+            // 
+            fast.Location = new Point(705, 63);
+            fast.Name = "fast";
+            fast.Size = new Size(75, 23);
+            fast.TabIndex = 36;
+            fast.Text = "Acelerar";
+            fast.UseVisualStyleBackColor = true;
+            fast.Click += fast_Click;
+            // 
+            // slow
+            // 
+            slow.Location = new Point(705, 88);
+            slow.Name = "slow";
+            slow.Size = new Size(75, 23);
+            slow.TabIndex = 35;
+            slow.Text = "Retroceder";
+            slow.UseVisualStyleBackColor = true;
+            slow.Click += slow_Click;
+            // 
+            // velAtual
+            // 
+            velAtual.Location = new Point(696, 34);
+            velAtual.Name = "velAtual";
+            velAtual.ReadOnly = true;
+            velAtual.Size = new Size(49, 23);
+            velAtual.TabIndex = 34;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(676, 9);
+            label4.Name = "label4";
+            label4.Size = new Size(84, 15);
+            label4.TabIndex = 32;
+            label4.Text = "REPRODUÇÃO";
+            // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new Point(456, 63);
+            label12.Name = "label12";
+            label12.Size = new Size(58, 15);
+            label12.TabIndex = 31;
+            label12.Text = "ForçaY ➝";
+            // 
+            // Forcay_box
+            // 
+            Forcay_box.Location = new Point(510, 60);
+            Forcay_box.Name = "Forcay_box";
+            Forcay_box.ReadOnly = true;
+            Forcay_box.Size = new Size(49, 23);
+            Forcay_box.TabIndex = 30;
+            // 
+            // Forcax_box
+            // 
+            Forcax_box.Location = new Point(510, 34);
+            Forcax_box.Name = "Forcax_box";
+            Forcax_box.ReadOnly = true;
+            Forcax_box.Size = new Size(49, 23);
+            Forcax_box.TabIndex = 29;
             // 
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(69, 141);
+            label5.Location = new Point(381, 9);
             label5.Name = "label5";
             label5.Size = new Size(89, 15);
             label5.TabIndex = 26;
             label5.Text = "INFORMAÇÕES";
             // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(55, 9);
-            label2.Name = "label2";
-            label2.Size = new Size(112, 15);
-            label2.TabIndex = 25;
-            label2.Text = "FUNCIONALIDADES";
-            // 
-            // abrir_doc
-            // 
-            abrir_doc.Location = new Point(55, 95);
-            abrir_doc.Name = "abrir_doc";
-            abrir_doc.Size = new Size(111, 24);
-            abrir_doc.TabIndex = 24;
-            abrir_doc.Text = "Carregar Arquivos";
-            abrir_doc.UseVisualStyleBackColor = true;
-            abrir_doc.Click += button1_Click;
-            // 
             // Parar_bt
             // 
-            Parar_bt.Location = new Point(69, 66);
+            Parar_bt.Location = new Point(49, 84);
             Parar_bt.Name = "Parar_bt";
             Parar_bt.Size = new Size(75, 23);
             Parar_bt.TabIndex = 23;
@@ -138,7 +249,7 @@
             // 
             // Iniciar_bt
             // 
-            Iniciar_bt.Location = new Point(69, 37);
+            Iniciar_bt.Location = new Point(49, 55);
             Iniciar_bt.Name = "Iniciar_bt";
             Iniciar_bt.Size = new Size(75, 23);
             Iniciar_bt.TabIndex = 22;
@@ -148,33 +259,24 @@
             // 
             // VelY_Box
             // 
-            VelY_Box.Location = new Point(154, 439);
+            VelY_Box.Location = new Point(391, 61);
             VelY_Box.Name = "VelY_Box";
             VelY_Box.ReadOnly = true;
             VelY_Box.Size = new Size(49, 23);
             VelY_Box.TabIndex = 21;
             // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Location = new Point(154, 421);
-            label11.Name = "label11";
-            label11.Size = new Size(29, 15);
-            label11.TabIndex = 20;
-            label11.Text = "VelY";
-            // 
             // label10
             // 
             label10.AutoSize = true;
-            label10.Location = new Point(154, 362);
+            label10.Location = new Point(350, 38);
             label10.Name = "label10";
-            label10.Size = new Size(29, 15);
+            label10.Size = new Size(44, 15);
             label10.TabIndex = 19;
-            label10.Text = "VelX";
+            label10.Text = "VelX ➝";
             // 
             // VelX_Box
             // 
-            VelX_Box.Location = new Point(154, 380);
+            VelX_Box.Location = new Point(391, 34);
             VelX_Box.Name = "VelX_Box";
             VelX_Box.ReadOnly = true;
             VelX_Box.Size = new Size(49, 23);
@@ -183,15 +285,15 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(22, 421);
+            label8.Location = new Point(241, 64);
             label8.Name = "label8";
-            label8.Size = new Size(33, 15);
+            label8.Size = new Size(48, 15);
             label8.TabIndex = 15;
-            label8.Text = "PosY";
+            label8.Text = "PosY ➝";
             // 
             // PosY_Box
             // 
-            PosY_Box.Location = new Point(22, 439);
+            PosY_Box.Location = new Point(286, 61);
             PosY_Box.Name = "PosY_Box";
             PosY_Box.ReadOnly = true;
             PosY_Box.Size = new Size(49, 23);
@@ -200,69 +302,34 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(22, 362);
+            label7.Location = new Point(241, 38);
             label7.Name = "label7";
-            label7.Size = new Size(33, 15);
+            label7.Size = new Size(48, 15);
             label7.TabIndex = 13;
-            label7.Text = "PosX";
+            label7.Text = "PosX ➝";
             // 
             // PosX_Box
             // 
-            PosX_Box.Location = new Point(22, 380);
+            PosX_Box.Location = new Point(286, 34);
             PosX_Box.Name = "PosX_Box";
             PosX_Box.ReadOnly = true;
             PosX_Box.Size = new Size(49, 23);
             PosX_Box.TabIndex = 12;
             // 
-            // TempoIteracao_Box
-            // 
-            TempoIteracao_Box.Location = new Point(86, 281);
-            TempoIteracao_Box.Name = "TempoIteracao_Box";
-            TempoIteracao_Box.ReadOnly = true;
-            TempoIteracao_Box.Size = new Size(49, 23);
-            TempoIteracao_Box.TabIndex = 7;
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Location = new Point(55, 263);
-            label4.Name = "label4";
-            label4.Size = new Size(123, 15);
-            label4.TabIndex = 6;
-            label4.Text = "Tempo entre Iterações";
-            // 
             // Iteracoes_Box
             // 
-            Iteracoes_Box.Location = new Point(86, 237);
+            Iteracoes_Box.Location = new Point(391, 89);
             Iteracoes_Box.Name = "Iteracoes_Box";
             Iteracoes_Box.ReadOnly = true;
             Iteracoes_Box.Size = new Size(49, 23);
             Iteracoes_Box.TabIndex = 5;
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(79, 217);
-            label3.Name = "label3";
-            label3.Size = new Size(54, 15);
-            label3.TabIndex = 4;
-            label3.Text = "Iterações";
-            // 
             // Corpos_Box
             // 
-            Corpos_Box.Location = new Point(86, 191);
+            Corpos_Box.Location = new Point(114, 25);
             Corpos_Box.Name = "Corpos_Box";
             Corpos_Box.Size = new Size(49, 23);
             Corpos_Box.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(79, 173);
-            label1.Name = "label1";
-            label1.Size = new Size(45, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Corpos";
             // 
             // Form1
             // 
@@ -283,24 +350,30 @@
         private ContextMenuStrip contextMenuStrip1;
         private GroupBox groupBox1;
         private TextBox Corpos_Box;
-        private Label label1;
-        private TextBox TempoIteracao_Box;
-        private Label label4;
         private TextBox Iteracoes_Box;
-        private Label label3;
         private Label label8;
         private TextBox PosY_Box;
         private Label label7;
         private TextBox PosX_Box;
         private TextBox VelY_Box;
-        private Label label11;
         private Label label10;
         private TextBox VelX_Box;
         private Button Iniciar_bt;
         private Button Parar_bt;
-        private Button abrir_doc;
         private Label label5;
+        private TextBox Forcax_box;
+        private TextBox Forcay_box;
+        private Label label12;
+        private Label label4;
+        private Button slow;
+        private TextBox velAtual;
+        private Button fast;
         private Label label2;
+        private Label label9;
         private Label label6;
+        private Label label1;
+        private Label label3;
+        private Label label11;
+        private Label label13;
     }
 }

@@ -74,12 +74,14 @@ namespace SimuladorGravitacional
                 float x = (float)(corpo.PosX - tamanho / 2);
                 float y = (float)(corpo.PosY - tamanho / 2);
 
-                // Desenhar a elipse
-                g.FillEllipse(Brushes.Yellow, x, y, (float)tamanho, (float)tamanho);
+                // Desenhar uma elipse com contorno e sem preenchimento:
+                g.DrawEllipse(Pens.GreenYellow, x, y, (float)tamanho, (float)tamanho);
+                // Desenhar elipse preenchida:
+                //g.FillEllipse(Brushes.GreenYellow, x, y, (float)tamanho, (float)tamanho);
             }
         }
 
-        
+
         // Método alternativo ao de cima
         //public void DesenharCorpos(Graphics g)
         //{
@@ -156,12 +158,13 @@ namespace SimuladorGravitacional
                 }
 
                 // Inicia a simulação manualmente
-                simulacaoTimer.Interval = 35; // Define um intervalo muito curto para simular a atualização contínua
+                simulacaoTimer.Interval = 30; // Define um intervalo muito curto para simular a atualização contínua
                 simulacaoTimer.Tick += (s, args) =>
                 {
                     AtualizarEDesenhar();
                 };
                 simulacaoTimer.Start(); // Inicia o timer para atualizar a simulação
+                velAtual.Text = simulacaoTimer.Interval.ToString();
             }
             else
             {
@@ -184,6 +187,8 @@ namespace SimuladorGravitacional
                     PosY_Box.Text = corpo.PosY.ToString("F2");
                     VelX_Box.Text = corpo.VelX.ToString("F2");
                     VelY_Box.Text = corpo.VelY.ToString("F2");
+                    Forcax_box.Text = corpo.ForcaX.ToString("F2");
+                    Forcay_box.Text = corpo.ForcaY.ToString("F2");
                     break;
                 }
             }
@@ -264,7 +269,7 @@ namespace SimuladorGravitacional
                 }
 
                 // Inicia a simulação manualmente
-                simulacaoTimer.Interval = 35; // Define um intervalo muito curto para simular a atualização contínua
+                simulacaoTimer.Interval = 30; // Define um intervalo muito curto para simular a atualização contínua
                 simulacaoTimer.Tick += (s, args) =>
                 {
                     AtualizarEDesenhar();
@@ -276,6 +281,38 @@ namespace SimuladorGravitacional
                 // Lida com exceções, como arquivos não encontrados ou problemas de leitura
                 MessageBox.Show($"Erro ao ler o arquivo: {ex.Message}");
             }
+        }
+
+        private void fast_Click(object sender, EventArgs e)
+        {
+            if (simulacaoTimer.Interval > 10)
+            {
+                simulacaoTimer.Interval -= 10;
+            }
+            else if (simulacaoTimer.Interval > 1)
+            {
+                simulacaoTimer.Interval -= 1;
+            }
+            else if (simulacaoTimer.Interval == 1)
+            {
+                MessageBox.Show("O intervalo não pode ser menor que 1");
+            }
+
+            velAtual.Text = simulacaoTimer.Interval.ToString();
+
+        }
+
+        private void slow_Click(object sender, EventArgs e)
+        {
+            if (simulacaoTimer.Interval >= 40)
+            {
+                simulacaoTimer.Interval += 1;                
+            }
+            else if (simulacaoTimer.Interval < 40)
+            {
+                simulacaoTimer.Interval += 10;
+            }
+            velAtual.Text = simulacaoTimer.Interval.ToString();
         }
     }
 }
