@@ -57,6 +57,9 @@
             PosX_Box = new TextBox();
             Iteracoes_Box = new TextBox();
             Corpos_Box = new TextBox();
+            labelColisao = new Label();
+            labelCorpos2 = new Label();
+            labelCG = new Label();
             groupBox1.SuspendLayout();
             SuspendLayout();
             // 
@@ -331,18 +334,54 @@
             Corpos_Box.Size = new Size(49, 23);
             Corpos_Box.TabIndex = 1;
             // 
+            // labelColisao
+            // 
+            labelColisao.AutoSize = true;
+            labelColisao.ForeColor = SystemColors.Desktop;
+            labelColisao.Location = new Point(12, 9);
+            labelColisao.Name = "labelColisao";
+            labelColisao.Size = new Size(44, 15);
+            labelColisao.TabIndex = 3;
+            labelColisao.Text = "label14";
+            // 
+            // labelCorpos2
+            // 
+            labelCorpos2.AutoSize = true;
+            labelCorpos2.ForeColor = SystemColors.Desktop;
+            labelCorpos2.Location = new Point(12, 34);
+            labelCorpos2.Name = "labelCorpos2";
+            labelCorpos2.Size = new Size(44, 15);
+            labelCorpos2.TabIndex = 4;
+            labelCorpos2.Text = "label14";
+            // 
+            // labelCG
+            // 
+            labelCG.AutoSize = true;
+            labelCG.ForeColor = SystemColors.MenuText;
+            labelCG.Location = new Point(12, 60);
+            labelCG.Name = "labelCG";
+            labelCG.Size = new Size(44, 15);
+            labelCG.TabIndex = 5;
+            labelCG.Text = "label14";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.InactiveCaptionText;
+            BackColor = Color.FromArgb(224, 224, 224);
             ClientSize = new Size(808, 645);
+            Controls.Add(labelCG);
+            Controls.Add(labelCorpos2);
+            Controls.Add(labelColisao);
             Controls.Add(groupBox1);
             Name = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "SimuladorGravitacional";
+            WindowState = FormWindowState.Maximized;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -375,5 +414,8 @@
         private Label label3;
         private Label label11;
         private Label label13;
+        private Label labelCorpos2;
+        private Label labelColisao;
+        private Label labelCG;
     }
 }

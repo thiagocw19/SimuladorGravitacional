@@ -1,129 +1,170 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SimuladorGravitacional
+﻿namespace SimuladorGravitacional
 {
-    internal class Universo
+    public class Universo
     {
         public List<Corpo> corpos;
-        public ConcurrentBag<Corpo> corposParaRemover;
+        public List<Corpo> corposParaAdicionar;
         public int QuantidadeColididos;
+        private readonly object _lockObj = new object();
+        public double constanteGravitacional = 10; // Constante gravitacional ajustável
 
         public Universo()
         {
             corpos = new List<Corpo>();
-            corposParaRemover = new ConcurrentBag<Corpo>();
+            corposParaAdicionar = new List<Corpo>();
             QuantidadeColididos = 0;
         }
 
         public void AdicionarCorpo(Corpo corpo)
         {
-            corpos.Add(corpo);
+            lock (_lockObj)
+            {
+                corpos.Add(corpo);
+            }
         }
 
-        public void Atualizar(int larguraTela, int alturaTela)
+        public void SetConstanteGravitacional(double valor)
         {
+            constanteGravitacional = valor;
+        }
+
+        public void Atualizar(int larguraTela, int alturaTela, bool rebaterNasBordas = true)
+        {
+            // Cria uma cópia segura para iteração
+            List<Corpo> corposCopia;
+            lock (_lockObj)
+            {
+                corposCopia = corpos.Where(c => !c.Removido).ToList();
+            }
+
             // Resetar as forças antes de calcular
-            foreach (var corpo in corpos)
+            Parallel.ForEach(corposCopia, corpo =>
             {
                 corpo.ForcaX = 0.0;
                 corpo.ForcaY = 0.0;
-            }
+            });
 
-            // Calcular forças entre os corpos
-            var corposCopia = corpos.ToList();
+            // Calcular forças gravitacionais entre todos os pares de corpos
             Parallel.For(0, corposCopia.Count, i =>
             {
                 for (int j = i + 1; j < corposCopia.Count; j++)
                 {
-                    if (corposCopia[i].Colidiu(corposCopia[j]))
+                    var corpo1 = corposCopia[i];
+                    var corpo2 = corposCopia[j];
+
+                    // Evitar cálculos com corpos marcados para remoção
+                    if (corpo1.Removido || corpo2.Removido) continue;
+
+                    // Verificar colisão
+                    if (corpo1.Colidiu(corpo2))
                     {
-                        // Tratamento de colisão
-                        lock (corposParaRemover)
-                        {
-                            corposParaRemover.Add(corposCopia[i]);
-                            corposParaRemover.Add(corposCopia[j]);
-                        }
+                        // Tratar colisão
+                        TratamentoColisao(corpo1, corpo2);
                     }
                     else
                     {
-                        // Cálculo da força gravitacional
-                        double G = 0.1; // Constante gravitacional
-                        double distancia = Math.Sqrt(Math.Pow(corposCopia[i].PosX - corposCopia[j].PosX, 2) +
-                              Math.Pow(corposCopia[i].PosY - corposCopia[j].PosY, 2));
-
-                        // Evitar divisão por zero
-                        if (distancia > 0)
-                        {
-                            // Calcula a força gravitacional total entre os corpos i e j
-                            double forca = G * (corposCopia[i].Massa * corposCopia[j].Massa) / (distancia * distancia);
-
-                            // Calcula a componente X da força gravitacional
-                            double forcax = forca * (corposCopia[j].PosX - corposCopia[i].PosX) / distancia;
-
-                            // Calcula a componente Y da força gravitacional
-                            double forcay = forca * (corposCopia[j].PosY - corposCopia[i].PosY) / distancia;
-
-                            lock (corposCopia[i])
-                            {
-                                corposCopia[i].ForcaX += forcax;
-                                corposCopia[i].ForcaY += forcay;
-                            }
-
-                            lock (corposCopia[j])
-                            {
-                                corposCopia[j].ForcaX -= forcax;
-                                corposCopia[j].ForcaY -= forcay;
-                            }
-                        }
+                        // Calcular força gravitacional
+                        CalcularForcaGravitacional(corpo1, corpo2);
                     }
                 }
             });
 
-            // Atualizar velocidades baseado nas forças
-            Parallel.For(0, corpos.Count, i =>
+            // Atualizar velocidades e posições
+            Parallel.ForEach(corposCopia, corpo =>
             {
-                if (corpos[i].Massa > 0)
+                if (corpo.Removido) return;
+
+                // Atualizar velocidade
+                if (corpo.Massa > 0)
                 {
-                    corpos[i].VelX += corpos[i].ForcaX / corpos[i].Massa;
-                    corpos[i].VelY += corpos[i].ForcaY / corpos[i].Massa;
+                    corpo.VelX += corpo.ForcaX / corpo.Massa;
+                    corpo.VelY += corpo.ForcaY / corpo.Massa;
+
+                    // Limitar velocidade para evitar instabilidade
+                    LimitarVelocidade(corpo);
                 }
+
+                // Atualizar posição
+                corpo.AtualizarPosicao();
+
+                // Lidar com bordas da tela
+                corpo.LidarComBordas(larguraTela, alturaTela, rebaterNasBordas);
             });
 
-            // Atualizar posições
-            Parallel.For(0, corpos.Count, i =>
+            // Adicionar novos corpos e remover os marcados
+            lock (_lockObj)
             {
-                corpos[i].PosX += corpos[i].VelX; // Atualiza a posição X
-                corpos[i].PosY += corpos[i].VelY; // Atualiza a posição Y
-
-                // Limitar os corpos dentro da tela
-                if (corpos[i].PosX < 0) corpos[i].PosX = 0;
-                if (corpos[i].PosX > larguraTela) corpos[i].PosX = larguraTela;
-                if (corpos[i].PosY < 0) corpos[i].PosY = 0;
-                if (corpos[i].PosY > alturaTela) corpos[i].PosY = alturaTela;
-            });
-
-            // Remover corpos colididos e adicionar novos corpos fora do loop principal
-            lock (corpos)
-            {
-                foreach (var corpo in corposParaRemover)
+                // Adicionar novos corpos (resultantes de colisões)
+                if (corposParaAdicionar.Count > 0)
                 {
-                    corpos.Remove(corpo);
+                    corpos.AddRange(corposParaAdicionar);
+                    corposParaAdicionar.Clear();
                 }
-                //corposParaRemover = new ConcurrentBag<Corpo>(); // Limpar a bag de corpos para remover
+
+                // Remover corpos marcados
+                corpos.RemoveAll(c => c.Removido);
             }
         }
-        private void TratamentoColisao(Corpo a, Corpo b)
+
+        private void CalcularForcaGravitacional(Corpo corpo1, Corpo corpo2)
         {
-            Corpo novoCorpo = a + b; // Usa o operador sobrecarregado
-            lock (corpos)
+            double distanciaX = corpo2.PosX - corpo1.PosX;
+            double distanciaY = corpo2.PosY - corpo1.PosY;
+            double distanciaQuadrada = distanciaX * distanciaX + distanciaY * distanciaY;
+
+            // Evitar divisão por zero e forças excessivas a curtas distâncias
+            if (distanciaQuadrada < 0.0001)
             {
-                corposParaRemover.Add(a);
-                corposParaRemover.Add(b);
-                corpos.Add(novoCorpo); // Adiciona o novo corpo à lista
+                distanciaQuadrada = 0.0001;
+            }
+
+            double distancia = Math.Sqrt(distanciaQuadrada);
+
+            // Calcula a força gravitacional total entre os corpos
+            double forca = constanteGravitacional * (corpo1.Massa * corpo2.Massa) / distanciaQuadrada;
+
+            // Componentes da força
+            double forcaX = forca * distanciaX / distancia;
+            double forcaY = forca * distanciaY / distancia;
+
+            // Aplicar força aos corpos (terceira lei de Newton: ação e reação)
+            corpo1.ForcaX += forcaX;
+            corpo1.ForcaY += forcaY;
+            corpo2.ForcaX -= forcaX;
+            corpo2.ForcaY -= forcaY;
+        }
+
+        private void TratamentoColisao(Corpo corpo1, Corpo corpo2)
+        {
+            // Evitar processamento de corpos já marcados para remoção
+            if (corpo1.Removido || corpo2.Removido) return;
+
+            // Marcar os corpos para remoção
+            corpo1.Removido = true;
+            corpo2.Removido = true;
+
+            // Criar novo corpo resultante da colisão
+            Corpo novoCorpo = corpo1 + corpo2;
+
+            // Adicionar o novo corpo à lista de corpos para adicionar
+            lock (_lockObj)
+            {
+                corposParaAdicionar.Add(novoCorpo);
+                QuantidadeColididos++;
+            }
+        }
+
+        private void LimitarVelocidade(Corpo corpo)
+        {
+            // Limitar velocidade para evitar instabilidade na simulação
+            double velocidadeMax = 20.0;
+            double velocidadeAtual = Math.Sqrt(corpo.VelX * corpo.VelX + corpo.VelY * corpo.VelY);
+
+            if (velocidadeAtual > velocidadeMax)
+            {
+                double fator = velocidadeMax / velocidadeAtual;
+                corpo.VelX *= fator;
+                corpo.VelY *= fator;
             }
         }
     }
